@@ -40,30 +40,30 @@ bitrise-io/steps-xcode-archive:
 
 * project_path: $BITRISE_PROJECT_PATH
 * scheme: $BITRISE_SCHEME
-▼ export_method: auto-detect [auto-detect app-store ad-hoc enterprise development]
-* output_dir: $BITRISE_DEPLOY_DIR
-  team_id: 
   configuration: 
+▼ export_method: auto-detect [auto-detect app-store ad-hoc enterprise development]
+  team_id: 
 ▼ compile_bitcode: yes [yes no]
 ▼ upload_bitcode: yes [yes no]
-  custom_export_options_plist_content: 
 
-[Config]
+[Force Build Settings]
+  force_team_id: 
+  force_code_sign_identity: 
+  force_provisioning_profile_specifier: 
+  force_provisioning_profile: 
+  
+[Debug]
+  custom_export_options_plist_content: 
   artifact_name: ${scheme}
   xcodebuild_options: 
   workdir: $BITRISE_SOURCE_DIR
+  * output_dir: $BITRISE_DEPLOY_DIR
 ▼ is_clean_build: no [yes no]
 ▼ output_tool: xcpretty [xcpretty xcodebuild]
 ▼ is_export_xcarchive_zip: no [yes no]
 ▼ export_all_dsyms: yes [yes no]
 ▼ verbose_log: yes [yes no]
 ▼ use_deprecated_export: no [yes no]
-
-[Force Signing Build Settings]
-  force_team_id: 
-  force_code_sign_identity: 
-  force_provisioning_profile_specifier: 
-  force_provisioning_profile: 
 
 ----------------------------------------------
 ----------------------------------------------
@@ -130,9 +130,9 @@ bitrise-io/steps-git-clone:
 
 [Debug]
 ▼ reset_repository: No [No Yes]
+▼ manual_merge: yes [yes no]
   build_url: $BITRISE_BUILD_URL
   build_api_token: $BITRISE_BUILD_API_TOKEN
-▼ manual_merge: yes [yes no]
 
 
 ----------------------------------------------
@@ -159,13 +159,13 @@ bitrise-io/steps-certificate-and-profile-installer:
 
 ##############################################
 
-* keychain_path: $HOME/Library/Keychains/login.keychain
-* keychain_password: $BITRISE_KEYCHAIN_PASSWORD
   certificate_url: $BITRISE_CERTIFICATE_URL
   certificate_passphrase: $BITRISE_CERTIFICATE_PASSPHRASE
   provisioning_profile_url: $BITRISE_PROVISION_URL
+* keychain_path: $HOME/Library/Keychains/login.keychain
+* keychain_password: $BITRISE_KEYCHAIN_PASSWORD
 
-[Default Config]
+[Default Codesign Files]
 ▼ install_defaults: true [true false]
   default_certificate_url: $BITRISE_DEFAULT_CERTIFICATE_URL
   default_certificate_passphrase: $BITRISE_DEFAULT_CERTIFICATE_PASSPHRASE
@@ -254,9 +254,9 @@ echo "Hello World!"
 # bash ./path/to/script.sh
 # not just bash, e.g.:
 # ruby ./path/to/script.rb
-
-[Config]
 * runner_bin: /bin/bash
+
+[Debug]
   working_dir: $BITRISE_SOURCE_DIR
   script_file_path: 
 ▼ is_debug: no [no yes]
@@ -294,12 +294,12 @@ bitrise-io/steps-gradle-runner:
 ##############################################
 
 * gradlew_path: $GRADLEW_PATH
-* gradle_task: assemble
   gradle_file: $GRADLE_BUILD_FILE_PATH
-▼ cache_level: only_deps [all only_deps none]
+* gradle_task: assemble
   gradle_options: --stacktrace --no-daemon
+▼ cache_level: only_deps [all only_deps none]
 
-[Filter Config]
+[Output Filters]
   apk_file_include_filter: *.apk
   apk_file_exclude_filter: *unaligned.apk\n*Test*.apk\n
   test_apk_file_include_filter: *Test*.apk
@@ -393,7 +393,7 @@ bitrise-io/steps-xcode-test:
 ▼ export_uitest_artifacts: false [true false]
 ▼ generate_code_coverage_files: no [yes no]
 
-[Config]
+[Debug]
 ▼ wait_for_simulator_boot: yes [yes no]
   workdir: $BITRISE_SOURCE_DIR
 ▼ is_clean_build: no [yes no]
@@ -428,14 +428,16 @@ bitrise-community/steps-ionic-archive:
 
 ##############################################
 
-* workdir: $BITRISE_SOURCE_DIR
 ▼ platform: ios,android [ios,android ios android]
 ▼ configuration: release [release debug]
 ▼ target: device [device emulator]
+* workdir: $BITRISE_SOURCE_DIR
   build_config: $BITRISE_CORDOVA_BUILD_CONFIGURATION
   options: 
   ionic_username: 
   ionic_password: 
+  
+[DEBUG]
   ionic_version: 
   cordova_version: 
   cordova_ios_version: 
@@ -537,12 +539,12 @@ bitrise-steplib/steps-cache-push:
 
 [Config]
 ▼ fingerprint_method: file-content-hash [file-content-hash file-mod-time]
-▼ is_debug_mode: false [true false]
 ▼ compress_archive: false [true false]
 * bitrise_cache_include_paths: $BITRISE_CACHE_INCLUDE_PATHS
 * bitrise_cache_exclude_paths: $BITRISE_CACHE_EXCLUDE_PATHS
 * cache_api_url: $BITRISE_CACHE_API_URL
 * compare_cache_info_path: $BITRISE_CACHE_INFO_PATH
+▼ is_debug_mode: false [true false]
 
 
 ----------------------------------------------
@@ -578,11 +580,10 @@ bitrise-steplib/steps-carthage:
 
 ##############################################
 
-  github_access_token: $GITHUB_ACCESS_TOKEN
   carthage_command: bootstrap
   carthage_options: 
+  github_access_token: $GITHUB_ACCESS_TOKEN
 
-no change
 ----------------------------------------------
 ----------------------------------------------
 
@@ -722,25 +723,25 @@ bitrise-steplib/steps-xcode-archive-mac:
 
 * project_path: $BITRISE_PROJECT_PATH
 * scheme: $BITRISE_SCHEME
-▼ export_method: development [development app-store developer-id none]
   configuration: 
-  workdir: $BITRISE_SOURCE_DIR
-  custom_export_options_plist_content: 
+▼ export_method: development [development app-store developer-id none]
 
-[Force Codesign Build Settings]
+[Force Build Settings]
   force_team_id: 
   force_code_sign_identity: 
   force_provisioning_profile_specifier: 
   force_provisioning_profile: 
 
-[step output configs]
+[Debug]
+  custom_export_options_plist_content: 
 * artifact_name: ${scheme}
-▼ output_tool: xcpretty [xcpretty xcodebuild]
+  workdir: $BITRISE_SOURCE_DIR
   output_dir: $BITRISE_DEPLOY_DIR
+▼ is_clean_build: yes [yes no]
+▼ output_tool: xcpretty [xcpretty xcodebuild]
 ▼ is_export_xcarchive_zip: no [yes no]
 ▼ is_export_all_dsyms: no [yes no]
 ▼ verbose_log: no [yes no]
-▼ is_clean_build: yes [yes no]
 
 ----------------------------------------------
 ----------------------------------------------
