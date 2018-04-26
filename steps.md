@@ -299,7 +299,7 @@ bitrise-io/steps-gradle-runner:
   gradle_options: --stacktrace --no-daemon
 ▼ cache_level: only_deps [all only_deps none]
 
-[Output Config]
+[Output Filters]
   apk_file_include_filter: *.apk
   apk_file_exclude_filter: *unaligned.apk\n*Test*.apk\n
   test_apk_file_include_filter: *Test*.apk
